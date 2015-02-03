@@ -1,0 +1,30 @@
+#!/bin/bash
+
+
+indent() {
+  sed -e 's/^/       /'
+}
+
+
+SCRIPTS_FOLDER='.run_it_scripts'
+SCRIPTS_PATH=$1/${SCRIPTS_FOLDER}
+
+# Bail early but noisily
+if [ ! -d ${SCRIPTS_PATH} ]; then
+  echo "${SCRIPTS_PATH} empty. Skipping." | indent
+  exit 0
+fi
+
+echo "-----> Found a folder to execute (${SCRIPTS_PATH})"
+
+
+pushd ${SCRIPTS_PATH} >/dev/null
+
+find . \( ! -regex '.*/\..*' \) -type f -print0 | while read -d $'\0' file
+do
+    echo "Running '$file'" | indent
+    . $file
+done
+
+popd >/dev/null
+
