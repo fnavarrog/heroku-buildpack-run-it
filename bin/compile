@@ -5,9 +5,17 @@ indent() {
   sed -e 's/^/       /'
 }
 
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
 
-SCRIPTS_FOLDER='.run_it_scripts'
-SCRIPTS_PATH=$1/${SCRIPTS_FOLDER}
+echo ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR}
+
+BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
+echo ${BUILDPACK_DIR} 
+
+SCRIPTS_PATH=${BUILDPACK_DIR}/.run_it_scripts
+echo ${SCRIPTS_PATH}
 
 # Bail early but noisily
 if [ ! -d ${SCRIPTS_PATH} ]; then
@@ -17,14 +25,17 @@ fi
 
 echo "-----> Found a folder to execute (${SCRIPTS_PATH})"
 
+[ ! -d ${CACHE_DIR} ] && mkdir -p ${CACHE_DIR}
+[ ! -d ${BUILD_DIR} ] && mkdir -p ${BUILD_DIR}
 
-pushd ${SCRIPTS_PATH} >/dev/null
-
-find . \( ! -regex '.*/\..*' \) -type f -print0 | while read -d $'\0' file
+find ${SCRIPTS_PATH} ! -type d -print0 | while read -d $'\0' file
 do
-    echo "Running '$file'" | indent
-    . $file
+    pushd ${BUILDPACK_DIR} >/dev/null
+
+    echo "-----> Running '$file'"
+    . ${file} ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} |indent
+
+    popd >/dev/null
 done
 
-popd >/dev/null
 
