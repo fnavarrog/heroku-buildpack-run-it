@@ -1,8 +1,5 @@
 #!/bin/bash
 
-if [ -f $1/.run_it_scripts ]; then
-    echo "RunItScripts"
-    exit 0
-else
-    exit 1
-fi
+echo "RunItScripts"
+exit 0
+
