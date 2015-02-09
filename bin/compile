@@ -10,7 +10,7 @@ CACHE_DIR=$2
 ENV_DIR=$3
 
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
-SCRIPTS_PATH=${BUILDPACK_DIR}/.buildpack_run_scripts
+SCRIPTS_PATH=${BUILD_DIR}/.buildpack_run_scripts
 
 # Bail early but noisily
 if [ ! -d ${SCRIPTS_PATH} ]; then
