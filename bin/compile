@@ -28,7 +28,7 @@ do
     pushd ${BUILDPACK_DIR} >/dev/null
 
     echo "-----> Running '$file'"
-    . ${file} ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} |indent
+    . ${file} ${BUILD_DIR} ${CACHE_DIR} ${ENV_DIR} 2>&1 |indent
 
     popd >/dev/null
 done
